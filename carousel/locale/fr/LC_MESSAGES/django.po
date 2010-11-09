@@ -1,0 +1,47 @@
+# Django-carousel in French
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# Baptiste Mispelon , 2010.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: Django Carousel 0.1\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2010-11-09 18:23+0100\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: Baptiste Mispelon <bmispelon@gmail.com>\n"
+"Language-Team: French <LL@li.org>\n"
+"Language: French\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=n>1;\n"
+
+#: models.py:5 models.py:20
+msgid "name"
+msgstr "nom"
+
+#: models.py:11 models.py:19
+msgid "carousel"
+msgstr "carrousselle"
+
+#: models.py:12
+msgid "carousels"
+msgstr "carrousselles"
+
+#: models.py:21
+msgid "image"
+msgstr "image"
+
+#: models.py:22
+msgid "URL"
+msgstr "URL"
+
+#: models.py:28
+msgid "carousel element"
+msgstr "élément de carrousselle"
+
+#: models.py:29
+msgid "carousel elements"
+msgstr "éléments de carrousselle"
