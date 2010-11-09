@@ -4,7 +4,6 @@ setup(
     name='django-carousel',
     version=__import__('carousel').__version__,
     description='Helpers to generate dynamic carousels.',
-    long_description=open('README.rst').read(),
     author='Baptiste Mispelon',
     author_email='bmispelon@gmail.com',
     url='http://github.com/bmispelon/django-carousel',
