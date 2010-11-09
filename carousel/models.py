@@ -12,7 +12,7 @@ class Carousel(models.Model):
         verbose_name_plural = _('carousels')
     
     def get_elements(self):
-        return self.elements.all().order_by('name') # TODO: sort according to self.order
+        return self.elements.all()
 
 
 class CarouselElement(models.Model):
@@ -20,6 +20,7 @@ class CarouselElement(models.Model):
     name = models.CharField(_('name'), max_length=50)
     image = models.ImageField(_('image'), upload_to='carousel_uploads')
     url = models.URLField(_('URL'), blank=True)
+    position = models.PositiveIntegerField(_('position'), help_text=_('elements will be displayed in ascending order of position'), default=1)
     
     def __unicode__(self):
         return self.name
@@ -27,3 +28,4 @@ class CarouselElement(models.Model):
     class Meta:
         verbose_name = _('carousel element')
         verbose_name_plural = _('carousel elements')
+        ordering = ('position', 'name')
