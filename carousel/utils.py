@@ -9,7 +9,7 @@ def weighted_pick(x, key_weight=None):
     
     total_weights = sum(key_weight(e) for e in x)
     target = random.randint(0, total_weights)
-    for e in :
+    for e in x:
         target -= e[1]
         if target <= 0:
             return e[0]
