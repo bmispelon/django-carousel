@@ -26,6 +26,9 @@ class Carousel(models.Model):
         ordering = ('name', )
     
     def get_elements(self):
+        """Returns the list of elements for this carousel.
+        The order in which they are returned depends on the `distribution` field.
+        """
         return {
             self.DISTRIB_SEQUENTIAL: self._get_elements_sequential,
             self.DISTRIB_RANDOM: self._get_elements_random,
@@ -34,19 +37,30 @@ class Carousel(models.Model):
         }.get(self.distribution)()
     
     def _get_elements_sequential(self):
+        """Elements are sorted according to their `position` attribute.
+        """
         return self.elements.order_by('position')
     
     def _get_elements_random(self):
+        """Elements are simply shuffled randomly.
+        """
         elements = list(self.elements.all()) # force evaluation of queryset
         random.shuffle(elements)
         return elements
     
     def _get_elements_weighted_random(self):
+        """Elements are shuffled semi-randomly.
+        The `position` attribute of each element act as a weight for the randomization.
+        Elements that are "heavier" are more likely to be at the beginning of the list.
+        """
         elements = list(self.elements.all()) # force evaluation of queryset
         weighted_shuffle(elements, key_weight=lambda e: e.position)
         return elements
     
     def _get_elements_cluster_random(self):
+        """Elements are grouped according to their `position` attribute".
+        Each group is then shuffled randomly.
+        """
         clusters = defaultdict(list)
         for item in self.elements.all():
             clusters[item.position].append(item)
