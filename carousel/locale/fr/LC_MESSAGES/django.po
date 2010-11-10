@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Django Carousel 0.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-11-09 18:23+0100\n"
+"POT-Creation-Date: 2010-11-10 11:03+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: Baptiste Mispelon <bmispelon@gmail.com>\n"
 "Language-Team: French <LL@li.org>\n"
@@ -18,30 +18,62 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n>1;\n"
 
-#: models.py:5 models.py:20
+#: models.py:13
+msgid "sequential"
+msgstr "séquentielle"
+
+#: models.py:14
+msgid "random"
+msgstr "aléatoire"
+
+#: models.py:15
+msgid "weighted random"
+msgstr "aléatoire avec poids"
+
+#: models.py:16
+msgid "cluster random"
+msgstr "aléatoire groupée"
+
+#: models.py:18 models.py:63
 msgid "name"
 msgstr "nom"
 
-#: models.py:11 models.py:19
+#: models.py:19
+msgid "distribution"
+msgstr "distribution"
+
+#: models.py:24 models.py:62
 msgid "carousel"
 msgstr "carrousselle"
 
-#: models.py:12
+#: models.py:25
 msgid "carousels"
 msgstr "carrousselles"
 
-#: models.py:21
+#: models.py:61
+msgid ""
+"The position of the element in the sequence or the weight of the element in "
+"the randomization process (depending on the carousel's distribution)."
+msgstr ""
+"Soit la position de l'élément dans la liste, soit son poids dans le tri "
+"aléatoire (selon la distribution du carrousselle)."
+
+#: models.py:64
 msgid "image"
 msgstr "image"
 
-#: models.py:22
+#: models.py:65
 msgid "URL"
 msgstr "URL"
 
-#: models.py:28
+#: models.py:66
+msgid "position"
+msgstr "position"
+
+#: models.py:72
 msgid "carousel element"
 msgstr "élément de carrousselle"
 
-#: models.py:29
+#: models.py:73
 msgid "carousel elements"
 msgstr "éléments de carrousselle"
