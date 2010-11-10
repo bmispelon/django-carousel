@@ -9,12 +9,12 @@ def weighted_pick(x, key_weight=None):
     
     total_weights = sum(key_weight(e) for e in x)
     target = random.randint(0, total_weights)
-    for e in x:
+    for e in :
         target -= e[1]
         if target <= 0:
             return e[0]
 
-def weighted_shuffle(l, key_weight=None):
+def weighted_shuffle(x, key_weight=None):
     """Shuffles the sequence x in place.
     Elements that are "heavier" will be more likely to be at the beginning.
     The `key_weight` argument can be used to define how to access the element's weight.
