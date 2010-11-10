@@ -6,7 +6,7 @@ class CarouselAdmin(admin.ModelAdmin):
     list_display_links = ('name',)
 
 class CarouselElementAdmin(admin.ModelAdmin):
-    list_display = ('position', 'name', 'url')
+    list_display = ('position', 'name', 'url', 'carousel')
     list_display_links = ('name',)
     list_editable = ('position', )
 
