@@ -1,4 +1,5 @@
 from django import template
+from django.core.exceptions import ObjectDoesNotExist
 from carousel.models import Carousel
 
 register = template.Library()
@@ -60,7 +61,10 @@ class CarouselNode(template.Node):
         return Carousel.objects.get(pk=id)
     
     def render(self, context):
-        carousel = self.get_object(context)
+        try:
+            carousel = self.get_object(context)
+        except ObjectDoesNotExist:
+            return ''
         
         context['carousel'] = carousel
         return template.loader.render_to_string('carousel/templatetags/carousel.html', context)
