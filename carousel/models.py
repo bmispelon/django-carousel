@@ -40,12 +40,13 @@ class Carousel(models.Model):
         """
         if seed is not None:
             random.seed(seed)
-        return {
+        fn = {
             self.DISTRIBUTIONS.SEQUENTIAL: self._get_elements_sequential,
             self.DISTRIBUTIONS.RANDOM: self._get_elements_random,
             self.DISTRIBUTIONS.WEIGHTED_RANDOM: self._get_elements_weighted_random,
             self.DISTRIBUTIONS.CLUSTER_RANDOM: self._get_elements_cluster_random
-        }.get(self.distribution)()
+        }.get(self.distribution)
+        return list(fn())
 
     def _get_elements_sequential(self):
         """
