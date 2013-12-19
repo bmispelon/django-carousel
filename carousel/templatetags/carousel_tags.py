@@ -7,35 +7,42 @@ register = template.Library()
 @register.tag('carousel')
 def do_carousel(parser, token):
     """
-    {% carousel $carousel_obj %}
+    {% carousel $carousel_obj [max_items] %}
     """
-    carousel = token.split_contents()[1]
-    return CarouselNode(object=carousel)
+    bits = token.split_contents()
+    carousel = bits[1]
+    max_items = bits[2] if len(bits) > 2 else None
+    return CarouselNode(object=carousel, max_items=max_items)
 
 
 @register.tag('carousel_with_name')
 def do_carousel_with_name(parser, token):
     """
-    {% carousel_with_name $carousel_name %}
+    {% carousel_with_name $carousel_name [max_items] %}
     """
-    carousel_name = token.split_contents()[1]
-    return CarouselNode(name=carousel_name)
+    bits = token.split_contents()
+    carousel_name = bits[1]
+    max_items = bits[2] if len(bits) > 2 else None
+    return CarouselNode(name=carousel_name, max_items=max_items)
 
 
 @register.tag('carousel_with_id')
 def do_carousel_with_id(parser, token):
     """
-    {% carousel_with_name $carousel_id %}
+    {% carousel_with_name $carousel_id [max_items] %}
     """
-    carousel_id = token.split_contents()[1]
-    return CarouselNode(id=carousel_id)
+    bits = token.split_contents()
+    carousel_id = bits[1]
+    max_items = bits[2] if len(bits) > 2 else None
+    return CarouselNode(id=carousel_id, max_items=max_items)
 
 
 class CarouselNode(template.Node):
-    def __init__(self, object=None, name=None, id=None):
+    def __init__(self, object=None, name=None, id=None, max_items=None):
         self.carousel_object = object
         self.carousel_name = name
         self.carousel_id = id
+        self.max_items = max_items
     
     
     def get_object(self, context):
@@ -66,5 +73,9 @@ class CarouselNode(template.Node):
         except ObjectDoesNotExist:
             return ''
         
-        context['carousel'] = carousel
+        elements = carousel.get_elements()
+        if self.max_items:
+            max_items = template.Variable(self.max_items).resolve(context)
+            elements = elements[:max_items]
+        context['elements'] = elements
         return template.loader.render_to_string('carousel/templatetags/carousel.html', context)

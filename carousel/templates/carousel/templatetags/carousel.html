@@ -1,5 +1,5 @@
 <ul class="carousel">
-    {% for item in carousel.get_elements %}
+    {% for item in elements %}
         <li class="carousel-item {% cycle 'odd' 'even' %}">
             {% if item.url %}<a href="{{ item.url }}" class="external">{% endif %}
             <img src="{{ item.image.url }}" alt="carousel_item" title="{{ item.name }}" height="{{ item.image.height }}" width="{{ item.image.width }}" />
