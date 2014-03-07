@@ -76,6 +76,6 @@ class CarouselNode(template.Node):
         elements = carousel.get_elements()
         if self.max_items:
             max_items = template.Variable(self.max_items).resolve(context)
-            elements = elements[:max_items]
+            elements = list(elements)[:max_items]
         context['elements'] = elements
         return template.loader.render_to_string('carousel/templatetags/carousel.html', context)
