@@ -14,7 +14,7 @@ def _get_carousel(**kwargs):
 
 
 @register.inclusion_tag('carousel/templatetags/carousel.html')
-def carousel(carousel=None, name=None, pk=None, max_items=None):
+def carousel(carousel=None, name=None, pk=None, max_items=None, size=True):
     assert len([x for x in (carousel, name, pk) if x is not None]) == 1, "You must provide exactly one of (carousel, name, pk)"
 
     if pk is not None:
@@ -26,4 +26,4 @@ def carousel(carousel=None, name=None, pk=None, max_items=None):
     if max_items is not None:
         elements = elements[:max_items]
 
-    return {'elements': elements}
+    return {'elements': elements, 'size': size}
