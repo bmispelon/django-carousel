@@ -1,4 +1,7 @@
-import random
+from itertools import chain, groupby
+from operator import attrgetter
+import random as random_mod
+
 
 def weighted_pick(x, key_weight=None):
     """Returns one element from the sequence x.
@@ -10,11 +13,12 @@ def weighted_pick(x, key_weight=None):
         key_weight = lambda t: t[1]
     
     total_weights = sum(key_weight(e) for e in x)
-    target = random.randint(0, total_weights)
+    target = random_mod.randint(0, total_weights)
     for e in x:
         target -= e[1]
         if target <= 0:
             return e[0]
+
 
 def weighted_shuffle(x, key_weight=None):
     """Shuffles the sequence x in place.
@@ -31,6 +35,7 @@ def weighted_shuffle(x, key_weight=None):
         j = weighted_pick(weights[:i+1])
         x[i], x[j] = x[j], x[i]
 
+
 def shuffled(iterable, weight=None):
     """
     Return a shuffled copy of the given iterable.
@@ -39,7 +44,28 @@ def shuffled(iterable, weight=None):
     """
     l = list(iterable)  # copy
     if weight is None:
-        random.shuffle(l)
+        random_mod.shuffle(l)
     else:
         weighted_shuffle(l, key_weight=weight)
     return l
+
+
+def sequential(elements, key=attrgetter('position')):
+    return sorted(elements, key=key)
+
+
+def random(elements):
+    return shuffled(elements)
+
+
+def weighted_random(elements, key=attrgetter('position')):
+    l = list(elements)
+    weighted_shuffle(l, key_weight=key)
+    return l
+
+
+def cluster_random(elements, key=attrgetter('position')):
+    ordered = sorted(elements, key=key)
+    grouped = groupby(ordered, key=key)
+    clustered = chain.from_iterable(shuffled(elements) for _, elements in grouped)
+    return list(clustered)

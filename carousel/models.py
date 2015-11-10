@@ -1,10 +1,10 @@
-from itertools import chain, groupby
 import random
 
 from django.db import models
+from django.utils.functional import cached_property
 from django.utils.translation import ugettext_lazy as _
 
-from utils import weighted_shuffle, shuffled
+from . import shuffling
 
 class Carousel(models.Model):
     class DISTRIBUTIONS:
@@ -25,6 +25,8 @@ class Carousel(models.Model):
                                                     choices=DISTRIBUTIONS.choices,
                                                     default=DISTRIBUTIONS.SEQUENTIAL)
 
+    _cached_elements = None
+
     def __unicode__(self):
         return self.name
 
@@ -33,49 +35,32 @@ class Carousel(models.Model):
         verbose_name_plural = _('carousels')
         ordering = ('name', )
 
-    def get_elements(self, seed=None):
+    def get_elements(self, seed=None, cached=True):
         """
         Returns the list of elements for this carousel.
         The order in which they are returned depends on the `distribution` field.
         """
         if seed is not None:
             random.seed(seed)
-        fn = {
-            self.DISTRIBUTIONS.SEQUENTIAL: self._get_elements_sequential,
-            self.DISTRIBUTIONS.RANDOM: self._get_elements_random,
-            self.DISTRIBUTIONS.WEIGHTED_RANDOM: self._get_elements_weighted_random,
-            self.DISTRIBUTIONS.CLUSTER_RANDOM: self._get_elements_cluster_random
-        }.get(self.distribution)
-        return list(fn())
 
-    def _get_elements_sequential(self):
-        """
-        Elements are sorted according to their `position` attribute.
-        """
-        return self.elements.order_by('position')
+        if cached and self._cached_elements is None:
+            self._cached_elements = list(self.elements.all())
 
-    def _get_elements_random(self):
-        """
-        Elements are simply shuffled randomly.
-        """
-        return shuffled(self.elements.all())
+        elements = self._cached_elements if cached else self.elements.all()
 
-    def _get_elements_weighted_random(self):
-        """
-        Elements are shuffled semi-randomly.
-        The `position` attribute of each element act as a weight for the randomization.
-        Elements that are "heavier" are more likely to be at the beginning of the list.
-        """
-        return suffled(elements, weight=lambda e: e.position)
+        return self.shuffle(elements)
 
-    def _get_elements_cluster_random(self):
+    @property
+    def shuffle(self):
         """
-        Elements are grouped according to their `position` attribute.
-        Each group is then shuffled randomly.
+        Return the appropriate shuffle function for this carousel.
         """
-        qs = self.elements.order_by('position')
-        grouped = groupby(qs, key=lambda e: e.position)
-        return chain.from_iterable(shuffled(elements) for _, elements in grouped)
+        return {
+            self.DISTRIBUTIONS.SEQUENTIAL: shuffling.sequential,
+            self.DISTRIBUTIONS.RANDOM: shuffling.random,
+            self.DISTRIBUTIONS.WEIGHTED_RANDOM: shuffling.weighted_random,
+            self.DISTRIBUTIONS.CLUSTER_RANDOM: shuffling.cluster_random,
+        }[self.distribution]
 
 
 class CarouselElement(models.Model):
@@ -97,3 +82,7 @@ class CarouselElement(models.Model):
         verbose_name = _('carousel element')
         verbose_name_plural = _('carousel elements')
         ordering = ('position', 'name')
+
+    @cached_property
+    def image_url(self):
+        return self.image.url
