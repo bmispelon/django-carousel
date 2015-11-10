@@ -1,33 +1,29 @@
+from django.utils.lru_cache import lru_cache
 from django import template
-from django.core.exceptions import ObjectDoesNotExist
+
 from carousel.models import Carousel
 
 register = template.Library()
 
+@lru_cache(maxsize=None)
+def _get_carousel(**kwargs):
+    try:
+        return Carousel.objects.get(**kwargs)
+    except Carousel.DoesNotExist:
+        return None
+
+
 @register.inclusion_tag('carousel/templatetags/carousel.html')
-def carousel(carousel, max_items=None):
-    """
-    {% carousel $carousel_obj [max_items] %}
-    """
-    elements = carousel.get_elements()
+def carousel(carousel=None, name=None, pk=None, max_items=None):
+    assert len([x for x in (carousel, name, pk) if x is not None]) == 1, "You must provide exactly one of (carousel, name, pk)"
+
+    if pk is not None:
+        carousel = _get_carousel(pk=pk)
+    elif name is not None:
+        carousel = _get_carousel(name=name)
+
+    elements = carousel.get_elements() if carousel else []
     if max_items is not None:
-        elements = list(elements)[:max_items]
+        elements = elements[:max_items]
+
     return {'elements': elements}
-
-
-@register.inclusion_tag('carousel/templatetags/carousel.html')
-def carousel_with_name(name, max_items=None):
-    """
-    {% carousel_with_name $carousel_name [max_items] %}
-    """
-    obj = Carousel.objects.get(name=name)
-    return carousel(obj, max_items)
-
-
-@register.inclusion_tag('carousel/templatetags/carousel.html')
-def carousel_with_id(id, max_items=None):
-    """
-    {% carousel_with_id $carousel_id [max_items] %}
-    """
-    obj = Carousel.objects.get(pk=id)
-    return carousel(obj, max_items)
